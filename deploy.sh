@@ -25,25 +25,21 @@ LOAD_BALANCERS=$(terraform output elb_name)
 AVAILABILITY_ZONES=$(terraform output availability_zones)
 ASG_SUBNETS=$(terraform output private_subnets)
 
-cd ../csd-notes-deploy
-
-echo "
-Deploying with args:
-image_id = ${IMAGE_ID}
-config_version = ${CONFIG_VERSION}
-env = ${ENV}
-lc_security_groups = ${LC_SECURITY_GROUPS}
-load_balancers = ${LOAD_BALANCERS}
-availability_zones = ${AVAILABILITY_ZONES}
-asg_subnets = ${ASG_SUBNETS}
-"
-
-EC2_INI_PATH=ec2.ini ansible-playbook -i ec2.py ansible/site.yml \
---extra-vars \
-"image_id=${IMAGE_ID}
+ARGS="image_id=${IMAGE_ID}
 config_version=${CONFIG_VERSION}
 env=${ENV}
 lc_security_groups=${LC_SECURITY_GROUPS}
 load_balancers=${LOAD_BALANCERS}
 availability_zones=${AVAILABILITY_ZONES}
-asg_subnets=${ASG_SUBNETS}
+asg_subnets=${ASG_SUBNETS}"
+
+cd ../csd-notes-deploy
+
+echo "
+Deploying with args:
+${ARGS}
+"
+
+EC2_INI_PATH=ec2.ini ansible-playbook -i ec2.py ansible/site.yml \
+--extra-vars ${ARGS}
+
