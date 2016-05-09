@@ -10,6 +10,11 @@ CONFIG_VERSION=$3
 
 cd ../csd-notes-infrastructure
 
+# always delete local tfstate files before doing anything else, because
+# terraform blindly pushes any local state to remote storage as a first step
+rm ./*.tfstate*
+rm ./.terraform/*.tfstate*
+
 terraform remote config -backend=s3 -backend-config="bucket=csd-notes-terraform"\
   -backend-config="key=${ENV}.tfstate" -backend-config="region=eu-west-1"
 
