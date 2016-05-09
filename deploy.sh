@@ -5,7 +5,7 @@ set -e
 [[ $# = 3 ]] || { echo "Usage: $0 ENV AMI_ID CONFIG_VERSION"; exit 1; }
 
 ENV=$1
-AMI_ID=$2
+IMAGE_ID=$2
 CONFIG_VERSION=$3
 
 cd ../csd-notes-infrastructure
@@ -20,26 +20,30 @@ terraform remote config -backend=s3 -backend-config="bucket=csd-notes-terraform"
 
 terraform remote pull
 
+LC_SECURITY_GROUPS=$(terraform output web_sg_id)
+LOAD_BALANCERS=$(terraform output elb_name)
+AVAILABILITY_ZONES=$(terraform output availability_zones)
+ASG_SUBNETS=$(terraform output private_subnets)
+
+cd ../csd-notes-deploy
+
 echo "
 Deploying with args:
-image_id = ${AMI_ID}
+image_id = ${IMAGE_ID}
 config_version = ${CONFIG_VERSION}
-env = $(terraform output environment)
-lc_security_groups = $(terraform output web_sg_id)
-load_balancers = $(terraform output elb_name)
-availability_zones = $(terraform output availability_zones)
-asg_subnets = $(terraform output private_subnets)
+env = ${ENV}
+lc_security_groups = ${LC_SECURITY_GROUPS}
+load_balancers = ${LOAD_BALANCERS}
+availability_zones = ${AVAILABILITY_ZONES}
+asg_subnets = ${ASG_SUBNETS}
 "
 
-EC2_INI_PATH=./ec2.ini \
-ansible-playbook \
--i ./ec2.py \
-../csd-notes-deploy/ansible/rolling_ami.yml \
+EC2_INI_PATH=ec2.ini ansible-playbook -i ec2.py ansible/site.yml \
 --extra-vars \
-"image_id=${AMI_ID}
+"image_id=${IMAGE_ID}
 config_version=${CONFIG_VERSION}
-env=$(terraform output environment)
-lc_security_groups=$(terraform output web_sg_id)
-load_balancers=$(terraform output elb_name)
-availability_zones=$(terraform output availability_zones)
-asg_subnets=$(terraform output private_subnets)"
+env=${ENV}
+lc_security_groups=${LC_SECURITY_GROUPS}
+load_balancers=${LOAD_BALANCERS}
+availability_zones=${AVAILABILITY_ZONES}
+asg_subnets=${ASG_SUBNETS}
