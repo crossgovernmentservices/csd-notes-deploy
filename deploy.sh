@@ -32,7 +32,7 @@ asg_subnets = $(terraform output private_subnets)
 "
 
 EC2_INI_PATH=./ec2.ini ansible-playbook \
-- ec2.py \
+-i ec2.py \
 ../csd-notes-deploy/ansible/rolling_ami.yml --extra-vars \
 "image_id=${AMI_ID}
 config_version=${CONFIG_VERSION}
