@@ -41,5 +41,5 @@ ${ARGS}
 "
 
 EC2_INI_PATH=ec2.ini ansible-playbook -i ec2.py ansible/site.yml \
---extra-vars ${ARGS}
+--extra-vars "${ARGS}"
 
