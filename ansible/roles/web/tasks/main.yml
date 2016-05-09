@@ -1,0 +1,4 @@
+---
+- name: run db migrations
+  shell: python3 manage.py db upgrade chdir={{ app.path }}
+  run_once: yes
