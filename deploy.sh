@@ -31,7 +31,7 @@ availability_zones = $(terraform output availability_zones)
 asg_subnets = $(terraform output private_subnets)
 "
 
-ansible-playbook ../csd-notes-deploy/ansible/rolling_ami.yml -vv --extra-vars \
+ansible-playbook ../csd-notes-deploy/ansible/rolling_ami.yml --extra-vars \
 "image_id=${AMI_ID}
 config_version=${CONFIG_VERSION}
 env=$(terraform output environment)
