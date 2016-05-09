@@ -28,6 +28,8 @@
     replace_all_instances: yes
     vpc_zone_identifier: "{{ asg_subnets }}"
     tags:
+      - Name: "notes-{{env}}-web"
+        propagate_at_launch: yes
       - Environment: "{{ env }}"
         propagate_at_launch: yes
       - ConfigVersion: "{{ config_version }}"
