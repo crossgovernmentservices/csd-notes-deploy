@@ -1,8 +1,5 @@
 ---
 - hosts: "tag_Name_notes_{{env}}_web"
-  become: yes
-  become_user: web
-  become_method: sudo
 
   roles:
     - web
