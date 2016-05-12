@@ -40,6 +40,10 @@ Deploying with args:
 ${ARGS}
 "
 
-EC2_INI_PATH=ec2.ini ansible-playbook -i ec2.py ansible/site.yml \
---extra-vars "${ARGS}"
+# EC2_INI_PATH=ec2.ini ansible-playbook -i ec2.py ansible/site.yml \
+# --extra-vars "${ARGS}"
 
+
+EC2_INI_PATH=ec2.ini ansible-playbook -i ec2.py -u jenkins \
+--ssh-common-args="-o 'StrictHostKeyChecking=no' -o ProxyCommand='ssh -W %h:%p -o StrictHostKeyChecking=no -q ubuntu@ssh.dev.notes.civilservice.digital'" \
+ansible/site.yml --extra-vars "${ARGS}"
