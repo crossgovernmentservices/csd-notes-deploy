@@ -40,10 +40,13 @@ Deploying with args:
 ${ARGS}
 "
 
-# EC2_INI_PATH=ec2.ini ansible-playbook -i ec2.py ansible/site.yml \
-# --extra-vars "${ARGS}"
+EC2_INI_PATH=ec2.ini ansible-playbook -i ec2.py ansible/rolling_ami.yml \
+--extra-vars "${ARGS}"
 
+# Ansible's ec2.py caches AWS API results, so we need to bust the cache
+# in between a deploy and post-deploy actions
+./ec2.py --refresh-cache
 
 EC2_INI_PATH=ec2.ini ansible-playbook -i ec2.py -u jenkins \
 --ssh-common-args="-o 'StrictHostKeyChecking=no' -o ProxyCommand='ssh -W %h:%p -o StrictHostKeyChecking=no -q ubuntu@ssh.dev.notes.civilservice.digital'" \
-ansible/site.yml --extra-vars "${ARGS}"
+ansible/web.yml --extra-vars "${ARGS}"
