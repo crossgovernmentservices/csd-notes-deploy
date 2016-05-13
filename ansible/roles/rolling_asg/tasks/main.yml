@@ -35,7 +35,7 @@
       - ConfigVersion: "{{ config_version }}"
         propagate_at_launch: yes
     wait_for_instances: yes
-  until: asg_result.viable_instances|int >= asg_desired_capacity|int
+  #until: asg_result.viable_instances|int >= asg_desired_capacity|int
   delay: 10
   retries: 120
   register: asg_result
