@@ -1,4 +1,4 @@
 ---
 - name: run db migrations
-  shell: python3 manage.py db upgrade chdir=/home/web/app
+  shell: SETTINGS=AWS python3 manage.py db upgrade chdir=/home/web/app
   run_once: yes
